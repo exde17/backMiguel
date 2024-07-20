@@ -28,17 +28,17 @@ export class Tecnico {
     })
     telefono: string;
 
-    @Column('text', {
-        nullable: false,
-        name: 'first_name',
-    })
-    firstName: string;
+    // @Column('text', {
+    //     nullable: false,
+    //     name: 'first_name',
+    // })
+    // firstName: string;
 
-    @Column('text', {
-        nullable: true,
-        name: 'last_name',
-    })
-    lastName: string;
+    // @Column('text', {
+    //     nullable: true,
+    //     name: 'last_name',
+    // })
+    // lastName: string;
 
     // @Column('text', {
     //     nullable: false,

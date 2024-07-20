@@ -13,35 +13,71 @@ import { UpdateTecnico } from './dto/update-tecnico.dto';
 export class TecnicoService {
   constructor(
     @InjectRepository(Tecnico)
-    private readonly tenicoRepository: Repository<Tecnico>,
+    private readonly tecnicoRepository: Repository<Tecnico>,
     @InjectRepository(User)
     private readonly usuarioRepository: Repository<User>,
     private readonly dataSource: DataSource
   ){}
+  // async create(createtecnicoDto: CreateTecnicoDto) {
+  //   try {
+  //     // Iniciar transacción
+  //     await this.dataSource.transaction(async transactionalEntityManager => {
+  //       const {lastName, firstName, documento, telefono, email, password, cargo} = createtecnicoDto;
+    
+  //       // Crear usuario
+  //       const usuario = this.usuarioRepository.create({email, password});
+  //       const createUser = await transactionalEntityManager.save(usuario);
+    
+  //       if (createUser) {
+  //         // Crear técnico y asignar usuario creado
+  //         const funcionario = this.tenicoRepository.create({
+  //           lastName,
+  //           firstName,
+  //           documento,
+  //           telefono,
+  //           cargo,
+  //           user: createUser // Asignar el usuario creado al técnico
+  //         });
+    
+  //         // Guardar técnico
+  //         const createFuncionario = await transactionalEntityManager.save(funcionario);
+    
+  //         return {
+  //           message: 'Cliente creado con éxito',
+  //           createFuncionario
+  //         };
+  //       }
+  //     });
+  //   } catch (error) {
+  //     // Manejar error, posiblemente lanzar una excepción o retornar un mensaje de error
+  //     throw new Error('Error al crear el técnico y usuario');
+  //   } 
+      
+  //   }
+
   async create(createtecnicoDto: CreateTecnicoDto) {
     try {
       // Iniciar transacción
       await this.dataSource.transaction(async transactionalEntityManager => {
         const {lastName, firstName, documento, telefono, email, password, cargo} = createtecnicoDto;
-    
+  
         // Crear usuario
-        const usuario = this.usuarioRepository.create({email, password});
+        const usuario = this.usuarioRepository.create({email, password,lastName,
+          firstName,});
         const createUser = await transactionalEntityManager.save(usuario);
-    
+  
         if (createUser) {
           // Crear técnico y asignar usuario creado
-          const funcionario = this.tenicoRepository.create({
-            lastName,
-            firstName,
+          const funcionario = this.tecnicoRepository.create({ // Corregido el error tipográfico aquí
             documento,
             telefono,
             cargo,
             user: createUser // Asignar el usuario creado al técnico
           });
-    
+  
           // Guardar técnico
           const createFuncionario = await transactionalEntityManager.save(funcionario);
-    
+  
           return {
             message: 'Cliente creado con éxito',
             createFuncionario
@@ -49,16 +85,15 @@ export class TecnicoService {
         }
       });
     } catch (error) {
-      // Manejar error, posiblemente lanzar una excepción o retornar un mensaje de error
-      throw new Error('Error al crear el técnico y usuario');
+      console.error('Error al crear el técnico y usuario:', error);
+      throw new Error(`Error al crear el técnico y usuario: ${error.message}`);
     } 
-      
-    }
+  }
   
 
   async findAll() {
     try {
-      return await this.tenicoRepository.find()
+      return await this.tecnicoRepository.find()
     } catch (error) {
       return{
         message: 'Error al obtener los clientes',
@@ -70,7 +105,7 @@ export class TecnicoService {
 
   async findOne(id: string) {
     try {
-      return await this.tenicoRepository.findOne({
+      return await this.tecnicoRepository.findOne({
         where: {
           id
         }
@@ -83,7 +118,7 @@ export class TecnicoService {
 
   async update(id: string, updateTecnico: UpdateTecnico) {
     try {
-      const cliente = await this.tenicoRepository.update(id, updateTecnico)
+      const cliente = await this.tecnicoRepository.update(id, updateTecnico)
       return{
         message: 'Cliente actualizado con exito',
         // cliente
@@ -99,7 +134,7 @@ export class TecnicoService {
 
   async remove(id: string) {
     try {
-      await this.tenicoRepository.delete(id)
+      await this.tecnicoRepository.delete(id)
       return{
         message: 'Cliente eliminado con exito'
       }
