@@ -9,7 +9,7 @@ async function bootstrap() {
 
    // Habilitar CORS para dominios específicos
    app.enableCors({
-    origin: ['http://127.0.0.1:3000', 'http://localhost:3000'],
+    origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:5174'],
   });
   app.useGlobalFilters(new HttpExceptionFilter());
 
