@@ -8,6 +8,9 @@ import { Tecnico } from './entities/tecnico.entity';
 import { User } from 'src/user/entities/user.entity';
 import { DataSource } from 'typeorm';
 import { UpdateTecnico } from './dto/update-tecnico.dto';
+import { JwtPayload } from 'src/user/interfaces';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class TecnicoService {
@@ -16,7 +19,8 @@ export class TecnicoService {
     private readonly tecnicoRepository: Repository<Tecnico>,
     @InjectRepository(User)
     private readonly usuarioRepository: Repository<User>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly jwtService: JwtService,
   ){}
   // async create(createtecnicoDto: CreateTecnicoDto) {
   //   try {
@@ -57,18 +61,22 @@ export class TecnicoService {
 
   async create(createtecnicoDto: CreateTecnicoDto) {
     try {
-      // Iniciar transacción
-      await this.dataSource.transaction(async transactionalEntityManager => {
+      // Iniciar transacción y devolver el resultado de la operación
+      return await this.dataSource.transaction(async transactionalEntityManager => {
         const {lastName, firstName, documento, telefono, email, password, cargo} = createtecnicoDto;
   
         // Crear usuario
-        const usuario = this.usuarioRepository.create({email, password,lastName,
-          firstName,});
+        const usuario = this.usuarioRepository.create({
+          email, 
+          password: bcrypt.hashSync(password, 10),
+          lastName,
+          firstName,
+        });
         const createUser = await transactionalEntityManager.save(usuario);
   
         if (createUser) {
           // Crear técnico y asignar usuario creado
-          const funcionario = this.tecnicoRepository.create({ // Corregido el error tipográfico aquí
+          const funcionario = this.tecnicoRepository.create({
             documento,
             telefono,
             cargo,
@@ -78,9 +86,10 @@ export class TecnicoService {
           // Guardar técnico
           const createFuncionario = await transactionalEntityManager.save(funcionario);
   
+          // Devolver respuesta al finalizar la transacción
           return {
             message: 'Cliente creado con éxito',
-            createFuncionario
+            // createFuncionario
           };
         }
       });
@@ -145,5 +154,10 @@ export class TecnicoService {
       }
       
     }
+  }
+
+  private getJwtToken(payload: JwtPayload){
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 }
