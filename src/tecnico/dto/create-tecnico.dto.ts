@@ -2,11 +2,11 @@ import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateTecnicoDto {
     @IsString()
-    readonly nombre: string;
+    readonly firstName: string;
 
     @IsString()
     @IsOptional()
-    readonly apellido?: string;
+    readonly lastName?: string;
 
     @IsString()
     // @IsOptional()
@@ -15,5 +15,14 @@ export class CreateTecnicoDto {
     @IsString()
     // @IsOptional()
     readonly telefono: string;
+
+    @IsString()
+    readonly email: string;
+
+    @IsString()
+    readonly password: string;
+
+    @IsString()
+    readonly cargo: string;
 
 }

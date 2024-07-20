@@ -6,6 +6,11 @@ import { HttpExceptionFilter } from './utils/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Boostrap');
+
+   // Habilitar CORS para dominios específicos
+   app.enableCors({
+    origin: ['http://127.0.0.1:3000', 'http://localhost:3000'],
+  });
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.setGlobalPrefix('api');

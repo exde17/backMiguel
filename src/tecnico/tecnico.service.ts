@@ -1,39 +1,64 @@
 import { Injectable } from '@nestjs/common';
 
-import { UpdateClienteDto } from './dto/update-tecnico.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 import { CreateTecnicoDto } from './dto/create-tecnico.dto';
 import { Tecnico } from './entities/tecnico.entity';
+import { User } from 'src/user/entities/user.entity';
+import { DataSource } from 'typeorm';
+import { UpdateTecnico } from './dto/update-tecnico.dto';
 
 @Injectable()
-export class ClienteService {
+export class TecnicoService {
   constructor(
     @InjectRepository(Tecnico)
-    private readonly clienteRepository: Repository<Tecnico>
+    private readonly tenicoRepository: Repository<Tecnico>,
+    @InjectRepository(User)
+    private readonly usuarioRepository: Repository<User>,
+    private readonly dataSource: DataSource
   ){}
   async create(createtecnicoDto: CreateTecnicoDto) {
     try {
-      const cliente = this.clienteRepository.create(createtecnicoDto)
-
-      await this.clienteRepository.save(cliente)
-      return{
-        message: 'Cliente creado con exito',
-        // cliente
-      }
+      // Iniciar transacción
+      await this.dataSource.transaction(async transactionalEntityManager => {
+        const {lastName, firstName, documento, telefono, email, password, cargo} = createtecnicoDto;
+    
+        // Crear usuario
+        const usuario = this.usuarioRepository.create({email, password});
+        const createUser = await transactionalEntityManager.save(usuario);
+    
+        if (createUser) {
+          // Crear técnico y asignar usuario creado
+          const funcionario = this.tenicoRepository.create({
+            lastName,
+            firstName,
+            documento,
+            telefono,
+            cargo,
+            user: createUser // Asignar el usuario creado al técnico
+          });
+    
+          // Guardar técnico
+          const createFuncionario = await transactionalEntityManager.save(funcionario);
+    
+          return {
+            message: 'Cliente creado con éxito',
+            createFuncionario
+          };
+        }
+      });
     } catch (error) {
-      return{
-        message: 'Error al crear el cliente',
-        error
-      }
+      // Manejar error, posiblemente lanzar una excepción o retornar un mensaje de error
+      throw new Error('Error al crear el técnico y usuario');
+    } 
       
     }
-  }
+  
 
   async findAll() {
     try {
-      return await this.clienteRepository.find()
+      return await this.tenicoRepository.find()
     } catch (error) {
       return{
         message: 'Error al obtener los clientes',
@@ -45,7 +70,7 @@ export class ClienteService {
 
   async findOne(id: string) {
     try {
-      return await this.clienteRepository.findOne({
+      return await this.tenicoRepository.findOne({
         where: {
           id
         }
@@ -56,9 +81,9 @@ export class ClienteService {
     }
   }
 
-  async update(id: string, updateClienteDto: UpdateClienteDto) {
+  async update(id: string, updateTecnico: UpdateTecnico) {
     try {
-      const cliente = await this.clienteRepository.update(id, updateClienteDto)
+      const cliente = await this.tenicoRepository.update(id, updateTecnico)
       return{
         message: 'Cliente actualizado con exito',
         // cliente
@@ -74,7 +99,7 @@ export class ClienteService {
 
   async remove(id: string) {
     try {
-      await this.clienteRepository.delete(id)
+      await this.tenicoRepository.delete(id)
       return{
         message: 'Cliente eliminado con exito'
       }

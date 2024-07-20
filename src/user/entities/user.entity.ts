@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  OneToMany,
 } from 'typeorm';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { Tecnico } from 'src/tecnico/entities/tecnico.entity';
 
 @Entity({
   name: 'users',
@@ -54,6 +56,9 @@ export class User {
     default: ['user'],
   })
   role: string[];
+
+  @OneToMany(() => Tecnico, (tecnico) => tecnico.user)
+  tecnico: Tecnico[];
 
   @CreateDateColumn({
     type: 'timestamptz',
