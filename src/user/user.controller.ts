@@ -39,7 +39,7 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard(), UseRoleGuard)
+  // @UseGuards(AuthGuard(), UseRoleGuard)
   findAll(
     @GetUser() user: User,
     @GetUser('email') email: string,

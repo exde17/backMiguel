@@ -13,6 +13,7 @@ export class ClienteController {
     return this.tecnicoService.create(createtecnicoDto);
   }
 
+  // trae todos lostecnicos y su usuario relacionado
   @Get()
   async findAll() {
     return this.tecnicoService.findAll();
