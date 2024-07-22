@@ -100,7 +100,7 @@ export class TecnicoService {
   }
   
 
-  async findAll() {
+  async findAllT() {
     try {
       const rest = await this.tecnicoRepository.find({
         relations: ['user'],
@@ -157,6 +157,32 @@ export class TecnicoService {
       
     }
   }
+
+  //TRAE TODOS LOS FUNCIONARIOS
+  async findAll() {
+    try {
+      const rest = await this.tecnicoRepository.find({
+        relations: ['user']
+      })
+
+      const tecnico = rest.map((tecnico) => {
+        const { user, ...rest } = tecnico;
+        return {
+          ...rest,
+          email: user.email,
+          lastName: user.lastName,
+          firstName: user.firstName
+        }
+      })
+
+      return tecnico
+    } catch (error) {
+      return{
+        message: 'Error al obtener los clientes',
+        error
+      }
+      
+    }}
 
   async findOne(id: string) {
     try {

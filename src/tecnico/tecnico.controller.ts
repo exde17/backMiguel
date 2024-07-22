@@ -12,11 +12,18 @@ export class ClienteController {
   async reate(@Body() createtecnicoDto: CreateTecnicoDto) {
     return this.tecnicoService.create(createtecnicoDto);
   }
+  
 
-  // trae todos lostecnicos y su usuario relacionado
-  @Get('tecnicos')
+  //TRAE TODOS LOS FUNCIONARIOS
+  @Get()
   async findAll() {
     return this.tecnicoService.findAll();
+  }
+  
+  // trae todos lostecnicos y su usuario relacionado
+  @Get('tecnicos')
+  async findAllT() {
+    return this.tecnicoService.findAllT();
   }
 
   // trae todos los cordinadores y su usuario relacionado
