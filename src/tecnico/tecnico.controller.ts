@@ -14,10 +14,17 @@ export class ClienteController {
   }
 
   // trae todos lostecnicos y su usuario relacionado
-  @Get()
+  @Get('tecnicos')
   async findAll() {
     return this.tecnicoService.findAll();
   }
+
+  // trae todos los cordinadores y su usuario relacionado
+  @Get('cordinador')
+  async findAllCordinador() {
+    return this.tecnicoService.findAllCordinador();
+  }
+
 
   @Get(':id')
   findOne(@Param('id',ParseUUIDPipe) id: string) {
