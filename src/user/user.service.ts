@@ -46,7 +46,7 @@ export class UserService {
 
       const user = await this.userRepository.findOne({ 
         where: { email },
-        select: ['email', 'password', 'id'],
+        select: ['email', 'password', 'id', 'firstName', 'lastName'],
        });
 
        if (!user){
@@ -59,6 +59,7 @@ export class UserService {
           throw new UnauthorizedException('Invalid password');
         }
 
+        console.log(user);
         return {
           // ...user,
           nombre: user.lastName + ' ' + user.firstName,
