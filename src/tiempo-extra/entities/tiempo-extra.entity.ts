@@ -1,4 +1,5 @@
 import { Coordinador } from "src/coordinador/entities/coordinador.entity";
+import { Tecnico } from "src/tecnico/entities/tecnico.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -34,12 +35,13 @@ export class TiempoExtra {
     proceso: string;
 
     @Column('text',{
-        nullable: false
+        nullable: false,
+        // array: true
     })
     tecnicos: string[];
 
-    @ManyToOne(()=> Coordinador, coordinador => coordinador.tiempoExtra)
-    coordinador: Coordinador;
+    @ManyToOne(()=> Tecnico, tecnico => tecnico.tiempoExtra)
+    cordinador: Tecnico;
 
     @Column('text',{
         nullable: false

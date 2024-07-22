@@ -1,5 +1,6 @@
 
 import { IsEmail, MinLength } from "class-validator";
+import { TiempoExtra } from "src/tiempo-extra/entities/tiempo-extra.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -73,6 +74,9 @@ export class Tecnico {
         default: () => 'CURRENT_TIMESTAMP'
     })
     updatedAt: Date;
+
+    @OneToMany(()=> TiempoExtra, tiempoExtra => tiempoExtra.cordinador)
+    tiempoExtra: TiempoExtra[];
 
 }
 

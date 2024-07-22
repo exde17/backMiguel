@@ -38,6 +38,6 @@ export class Coordinador {
     })
     updatedAt: Date;
 
-    @OneToMany(()=> TiempoExtra, tiempoExtra => tiempoExtra.coordinador)
-    tiempoExtra: TiempoExtra[];
+    // @OneToMany(()=> TiempoExtra, tiempoExtra => tiempoExtra.coordinador)
+    // tiempoExtra: TiempoExtra[];
 }

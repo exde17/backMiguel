@@ -2,13 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TiempoExtraService } from './tiempo-extra.service';
 import { CreateTiempoExtraDto } from './dto/create-tiempo-extra.dto';
 import { UpdateTiempoExtraDto } from './dto/update-tiempo-extra.dto';
+import { Auth } from 'src/user/decorator';
+import { ValidRoles } from 'src/user/interfaces';
 
-@Controller('tiempo-extra')
+@Controller('extra')
 export class TiempoExtraController {
   constructor(private readonly tiempoExtraService: TiempoExtraService) {}
 
   @Post()
-  create(@Body() createTiempoExtraDto: CreateTiempoExtraDto) {
+  // @Auth(ValidRoles.user)
+  async create(@Body() createTiempoExtraDto: CreateTiempoExtraDto) {
     return this.tiempoExtraService.create(createTiempoExtraDto);
   }
 

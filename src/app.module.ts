@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ClienteModule } from './tecnico/tecnico.module';
 import { CoordinadorModule } from './coordinador/coordinador.module';
+import { TiempoExtra } from './tiempo-extra/entities/tiempo-extra.entity';
+import { TiempoExtraModule } from './tiempo-extra/tiempo-extra.module';
 
 
 @Module({
@@ -27,6 +29,7 @@ import { CoordinadorModule } from './coordinador/coordinador.module';
     UserModule,
     ClienteModule,
     CoordinadorModule,
+    TiempoExtraModule,
   ],
 })
 export class AppModule {}
