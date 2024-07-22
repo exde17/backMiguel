@@ -53,18 +53,21 @@ export class UserService {
           throw new UnauthorizedException('Invalid imail');
        }
 
-        const isPasswordValid = await bcrypt.compareSync(password, user.password);
+        const isPasswordValid = bcrypt.compareSync(password, user.password);
 
         if (!isPasswordValid){
           throw new UnauthorizedException('Invalid password');
         }
 
         return {
-          ...user,
+          // ...user,
+          nombre: user.lastName + ' ' + user.firstName,
+          email: user.email,
           token: this.getJwtToken({ 
             // email: user.email,
             id: user.id,
           }),
+
           password: undefined,
         }
 
