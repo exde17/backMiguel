@@ -105,7 +105,7 @@ export class TecnicoService {
       const rest = await this.tecnicoRepository.find({
         relations: ['user'],
         where:{
-          cargo: 'tecnico'
+          cargo: 'TE'
         }
       })
 
@@ -134,7 +134,7 @@ export class TecnicoService {
       const rest = await this.tecnicoRepository.find({
         relations: ['user'],
         where:{
-          cargo: 'cordinador'
+          cargo: 'CO'
         }
       })
 
